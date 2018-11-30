@@ -1,0 +1,52 @@
+=============================================================================================================================================
+1. Trade agreement.
+
+From: PartyA-Importer.
+----------------------
+flow start TradeAgreementFlow exporter: PartyB, agreementId: "1", amount: 55, goods: "good1", agreementDate: "2018-11-28"
+run vaultQuery contractStateType: java_bootcamp.TradeAgreementState
+
+From: PartyB-Exporter.
+----------------------
+flow start AcceptAgreementFlow agreementId: "1"
+run vaultQuery contractStateType: java_bootcamp.TradeAgreementState
+=============================================================================================================================================
+2. Letter Of Credit.
+
+From:PartyA - Importer
+-----------------------
+flow start ApplyForLocFlow exporter: PartyB, importersBank: PartyC, exportersBank: PartyD, letterOfCreditId: "1", issueDate: "2018-11-28",amount: 55, expiryDate: "2018-12-23", agreementId: "1"
+run vaultQuery contractStateType: java_bootcamp.LetterOfCreditState
+
+From: PartyC - ImportersBank- IssueLoc
+--------------------------------------
+flow start IssueLocFlow letterOfCreditId: "1"
+run vaultQuery contractStateType: java_bootcamp.LetterOfCreditState
+=============================================================================================================================================
+3. Bill Of Lading:
+What is a 'Bill Of Lading'?
+A bill of lading is a legal document between a shipper and a carrier that details the type, quantity and destination of the goods being carried. The bill of lading also serves as a shipment receipt when the carrier delivers the goods at the predetermined destination. This document must accompany the shipped goods, no matter the form of transportation, and an authorized representative from the carrier, shipper and receiver must sign it.
+
+From PartyB: Exporter.
+-----------------------
+flow start CreateBolFlow importer: PartyA, exporter: PartyB, importersBank: PartyC, exportersBank: PartyD, carrier: PartyE, billOfLadingId: "1", descriptionOfGoods: "Test Desc", portOfLoading: "London", portOfDischarge: "New York", letterOfCreditId: "1"
+
+run vaultQuery contractStateType: java_bootcamp.BillOfLadingState
+run vaultQuery contractStateType: java_bootcamp.LetterOfCreditState
+
+==================================================================================================================================================
+4. Shipment
+
+From PartyA: Importer
+-----------------------
+Shipment Recieved.
+
+From PartyC: ImportersBank
+--------------------------
+PayToExportersBank
+
+From PartyD: ExporterBank
+------------------------
+PayToExporter
+
+==============================================================================================================================================
